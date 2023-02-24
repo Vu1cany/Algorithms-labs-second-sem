@@ -2,30 +2,16 @@
 
 using namespace std;
 
-/*
-7 2
-2 3 2 3 4 1 2
-2 6
-7 1
-M O S K L A B
-3
- */
-
-struct numbersNode{
-    int value = 0;
-    numbersNode* parent = nullptr;
-    numbersNode* left = nullptr;
-    numbersNode* right = nullptr;
+class Node{
+public:
+    int value;
+    char symbol;
+    Node* parent = nullptr;
+    Node* left = nullptr;
+    Node* right = nullptr;
 };
 
-struct symbolsNode{
-    char value = 0;
-    symbolsNode* parent = nullptr;
-    symbolsNode* left = nullptr;
-    symbolsNode* right = nullptr;
-};
-
-void numbersLRV(numbersNode* root, int* numbers, int& n){
+void numbersLRV(Node* root, int* numbers, int& n){
     if (root != nullptr){
         numbersLRV(root->left, numbers, n);
         numbersLRV(root->right, numbers, n);
@@ -34,11 +20,11 @@ void numbersLRV(numbersNode* root, int* numbers, int& n){
     }
 }
 
-void symbolsLRV(symbolsNode* root, char* symbols, int& n){
+void symbolsLRV(Node* root, char* symbols, int& n){
     if (root != nullptr){
         symbolsLRV(root->left, symbols, n);
         symbolsLRV(root->right, symbols, n);
-        symbols[n] = root->value;
+        symbols[n] = root->symbol;
         n++;
     }
 }
@@ -47,13 +33,13 @@ int main() {
     int numbersN, numbersQ;
     cin >> numbersN >> numbersQ;
 
-    numbersNode** arrNumbersNode = new numbersNode*[numbersN];
+    Node** arrNumbersNode = new Node*[numbersN];
 
     for (int i = 0; i < numbersN; ++i) {
-        arrNumbersNode[i] = new numbersNode;
+        arrNumbersNode[i] = new Node;
     }
 
-    numbersNode* numbersRoot = nullptr;
+    Node* numbersRoot = nullptr;
 
     for (int i = 0; i < numbersN; ++i) {    //Строим дерево через массив для чисел
         cin >> arrNumbersNode[i]->value;
@@ -81,8 +67,8 @@ int main() {
         cin >> index;
         index--;   //Для простоты работы с индексами
 
-        numbersNode* current = arrNumbersNode[index];
-        numbersNode* parent;
+        Node* current = arrNumbersNode[index];
+        Node* parent;
         if (current->parent != nullptr){
             parent = current->parent;
 
@@ -127,16 +113,16 @@ int main() {
     int symbolsN, symbolsQ;
     cin >> symbolsN >> symbolsQ;
 
-    symbolsNode** arrSymbolsNode = new symbolsNode*[symbolsN];
+    Node** arrSymbolsNode = new Node*[symbolsN];
 
     for (int i = 0; i < symbolsN; ++i) {
-        arrSymbolsNode[i] = new symbolsNode;
+        arrSymbolsNode[i] = new Node;
     }
 
-    symbolsNode* symbolsRoot = nullptr;
+    Node* symbolsRoot = nullptr;
 
     for (int i = 0; i < symbolsN; ++i) {    //Строим дерево через массив для символов
-        cin >> arrSymbolsNode[i]->value;
+        cin >> arrSymbolsNode[i]->symbol;
 
         if (symbolsRoot == nullptr){
             symbolsRoot = arrSymbolsNode[i];
@@ -160,8 +146,8 @@ int main() {
         cin >> index;
         index--;   //Для простоты работы с индексами
 
-        symbolsNode* current = arrSymbolsNode[index];
-        symbolsNode* parent;
+        Node* current = arrSymbolsNode[index];
+        Node* parent;
         if (current->parent != nullptr){
             parent = current->parent;
 
