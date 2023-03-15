@@ -1,36 +1,23 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
-enum Color {
-    WHITE,
-    GRAY,
-    BLACK,
-};
+void bfs(vector<vector<int>>& vector, bool* visited, const int& dist1){
+    queue<int> queue;
+    queue.push(dist1);
 
-void visit(vector<vector<int>>& vector, const int& node, Color* visited, const int& count, int* component){
-    visited[node] = GRAY;
-    component[node] = count;
-    for (int nextNode : vector[node]) {
-        if (visited[nextNode] == WHITE){
-            visit(vector, nextNode, visited, count, component);
+    while (!queue.empty()){
+        int node = queue.front();
+        queue.pop();
+        visited[node] = true;
+
+        for (auto nextNode : vector[node]) {
+            if (!visited[nextNode]) {
+                queue.push(nextNode);
+            }
         }
-    }
-    visited[node] = BLACK;
-}
-
-void dfs(const int& n,vector<vector<int>>& vector, Color* visited, int* component){
-    for (int i = 0; i < n; ++i) {
-        component[i] = 0;
-    }
-
-    int count = 1;
-    for (int i = 1; i < n; ++i) {
-        if (visited[i] == WHITE){
-            visit(vector, i, visited, count, component);
-        }
-        count++;
     }
 }
 
@@ -39,33 +26,47 @@ int main() {
     cin >> n >> m;
     n++;
     vector<vector<int>> vector(n);
-    Color visited[n];
+    bool visited[n];
     for (int i = 0; i < n; ++i) {
-        visited[i] = BLACK;
+        visited[i] = false;
     }
 
+    int node1, node2;
     for (int i = 0; i < m; ++i) {
-        int node1, node2;
         cin >> node1 >> node2;
-        visited[node1] = WHITE;
-        visited[node2] = WHITE;
         vector[node1].push_back(node2);
         vector[node2].push_back(node1);
     }
 
-    for (int i = 1; i < n; ++i) {
-        std::sort(vector[i].begin(), vector[i].end());
-    }
+    bfs(vector, visited, node1);
 
-    int component[n];
 
-    dfs(n, vector, visited, component);
+    bool flag = false;
+    int count1 = 0;
+    int count2 = 0;
     for (int i = 0; i < n; ++i) {
-        if (component[i] > 1){
-            cout << "NO";
+        if (vector[i].empty()) continue;
+
+        if (!visited[i]){
+            flag = true;
+            break;
+        }
+
+        if (vector[i].size() == 1){
+            count1++;
+        } else if (vector[i].size() == 2){
+            count2++;
+        } else {
+            flag = true;
+            break;
         }
     }
-    cout << "YES";
+
+    if (count1 == 2 && (count2 + count1 + 1) == n && !flag){
+        cout << "YES";
+    } else {
+        cout << "NO";
+    }
 
     return 0;
 }
