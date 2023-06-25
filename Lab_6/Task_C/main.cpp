@@ -123,7 +123,7 @@ int main() {
     for (int i = 0; i < N; ++i) {
         int temp;
         cin >> temp;
-        int index = simpleHash(temp, size);
+        int index = simpleHash(temp, size)  ;
         if (hashTable[index].Search(hashTable[index].root, temp) == nullptr){
             flag = true;
         }
